@@ -1,11 +1,18 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-    r := gin.Default()
-    r.GET("/", func(c *gin.Context) {
-        c.String(200,"nullpo")
-    })
-    r.Run()
+	router := gin.Default()
+	router.LoadHTMLGlob("templates/*.html")
+
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "index.html", gin.H{})
+	})
+
+	router.Run()
 }
