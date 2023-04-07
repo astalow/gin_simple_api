@@ -7,12 +7,21 @@ import (
 )
 
 func main() {
-	router := gin.Default()
-	router.LoadHTMLGlob("templates/*.html")
+	r := gin.Default()
+	r.LoadHTMLGlob("templates/*.html")
 
-	router.GET("/", func(ctx *gin.Context) {
-		ctx.HTML(http.StatusOK, "index.html", gin.H{})
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{})
 	})
 
-	router.Run()
+	r.POST("/submit", func(c *gin.Context) {
+		name := c.PostForm("name")
+		price := c.PostForm("price")
+		c.JSON(http.StatusOK, gin.H{
+			"name":  name,
+			"price": price,
+		})
+	})
+
+	r.Run()
 }
