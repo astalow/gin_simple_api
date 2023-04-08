@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8">
-    <title>Gin Sample</title>
-</head>
-<body>
-    <form action="/submit" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="apple">
-        <label for="price">Price:</label>
-        <input id="price" name="price" value="200"></input>
-        <input type="submit">
+    <title>JavaScript embedded in HTML</title>
+  </head>
+  <body>
+    <form id="myForm" action="/" method="POST">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+      <label for="price">Price:</label>
+      <input type="price" id="price" name="price">
+      <button type="submit">送信</button>
     </form>
-</body>
+    <pre style="border: 1px solid red;">{{ .Rawheader }}</pre>
+  </body>
 </html>
