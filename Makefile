@@ -21,7 +21,7 @@ go.sum:
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
-	rm -f go.mod go.sum
+	rm -f go.mod go.sum *.db
 
 run: mod
 	go run $(MAIN_PATH)
