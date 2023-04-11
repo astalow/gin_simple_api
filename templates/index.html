@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>JavaScript embedded in HTML</title>
-  </head>
-  <body>
-    <form id="myForm" action="/" method="POST">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name">
-      <label for="price">Price:</label>
-      <input type="price" id="price" name="price">
-      <button type="submit">送信</button>
-    </form>
-    <pre style="border: 1px solid red;">{{ .Rawheader }}</pre>
-  </body>
+<head>
+	<meta charset="UTF-8">
+	<title>JSON POST Form</title>
+</head>
+<body>
+	<form id="myForm" action="/">
+		<label for="name">Name:</label>
+		<input type="text" id="name" name="name" value="apple">
+		<label for="price">Price:</label>
+		<input type="number" id="price" name="price" value="200">
+		<input type="submit" value="送信">
+	</form>
+	<script>
+		document.getElementById("myForm").addEventListener("submit", function(event) {
+			event.preventDefault();
+			const form = event.target;
+			const data = {
+				name: form.name.value,
+				price: parseInt(form.price.value, 10)
+			};
+			fetch(form.action, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			})
+			.then(response => {
+				console.log(response);
+			})
+			.catch(error => {
+				console.error(error);
+			});
+		});
+	</script>
+</body>
 </html>
