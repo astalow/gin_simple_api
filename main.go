@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
@@ -78,22 +77,37 @@ func printDB(db *gorm.DB) {
 	fmt.Println()
 }
 
-func buildHTMLTableFromDB(db *gorm.DB) (s string) {
+func buildHTMLTableFromDB(db *gorm.DB) string {
 	var items []Item
-	db.Find(&items)
-
-	// テーブルヘッダーを追加
-	s += "\t\t<tr><th>Name</th><th>Price</th></tr>\n"
-
-	// テーブルの各行を追加
-	for _, item := range items {
-		s += "\t\t<tr><td>" + item.Name + "</td><td>" + strconv.Itoa(int(item.Price)) + "</td></tr>\n"
+	if err := db.Find(&items).Error; err != nil {
+		return ""
 	}
 
-	// テーブルを囲むタグを追加
-	s = "<table>\n" + s + "\t</table>"
+	const tableTemplate = `
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Price</th>
+		</tr>
+		{{range .}}
+			<tr>
+				<td>{{.Name}}</td>
+				<td>{{.Price}}</td>
+			</tr>
+		{{end}}
+	</table>`
 
-	return s
+	tmpl, err := template.New("table").Parse(tableTemplate)
+	if err != nil {
+		return ""
+	}
+
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, items); err != nil {
+		return ""
+	}
+
+	return buf.String()
 }
 
 func main() {
