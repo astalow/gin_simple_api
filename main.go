@@ -3,8 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
@@ -64,10 +67,43 @@ func printBody(c *gin.Context) {
 	fmt.Print("\n" + string(body) + "\n\n")
 }
 
+func printDB(db *gorm.DB) {
+	var users []Item
+	db.Find(&users)
+
+	fmt.Println()
+	for _, user := range users {
+		fmt.Printf("name: %s, price: %d\n", user.Name, user.Price)
+	}
+	fmt.Println()
+}
+
+func buildHTMLTableFromDB(db *gorm.DB) (s string) {
+	var items []Item
+	db.Find(&items)
+
+	// テーブルヘッダーを追加
+	s += "\t\t<tr><th>Name</th><th>Price</th></tr>\n"
+
+	// テーブルの各行を追加
+	for _, item := range items {
+		s += "\t\t<tr><td>" + item.Name + "</td><td>" + strconv.Itoa(int(item.Price)) + "</td></tr>\n"
+	}
+
+	// テーブルを囲むタグを追加
+	s = "<table>\n" + s + "\t</table>"
+
+	return s
+}
+
 func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
 	db := migrateDB()
+	printDB(db)
+
+	var result Item
+	db.Raw("SELECT * FROM items").Scan(&result)
 
 	r.GET("/", func(c *gin.Context) {
 		var items []Item
@@ -77,7 +113,22 @@ func main() {
 	})
 
 	r.GET("/view", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		// テンプレートファイルをパースする
+		tmpl, err := template.ParseFiles("templates/index.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// データベースからHTMLテーブルを構築する
+		htmlTable := buildHTMLTableFromDB(db)
+
+		// テンプレートをレンダリングする
+		err = tmpl.Execute(c.Writer, gin.H{
+			"table": template.HTML(htmlTable),
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
 	})
 
 	r.POST("/", func(c *gin.Context) {
