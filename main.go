@@ -12,7 +12,7 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
 	db := migrateDB()
-	r.Use(RequestLogger())
+	// r.Use(RequestLogger())
 	printDB(db)
 
 	session(r)

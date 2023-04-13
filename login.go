@@ -41,7 +41,7 @@ func session(r *gin.Engine) {
 		// ユーザー名とパスワードの認証処理を実装する。
 		// ここでは、簡単のために固定のユーザー名とパスワードを設定しています。
 		if username == "user" && password == "password" {
-			fmt.Println("login success")
+			fmt.Println("User logged in successfully")
 			// 認証に成功した場合、セッションを開始し、ログイン済みの状態にする。
 			session := sessions.Default(c)
 			session.Set("username", username)
