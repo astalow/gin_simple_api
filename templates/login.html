@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+
+<body>
+    <form id="loginform" method="post" action="/login">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="user">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" value="password">
+        <button type="submit">Login</button>
+    </form>
+    <script>
+		document.getElementById("loginform").addEventListener("submit", function(event) {
+			event.preventDefault();
+			const form = event.target;
+			const data = {
+				Username: form.username.value,
+				Password: form.password.value
+			};
+			fetch(form.action, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			})
+			.then(response => {
+				console.log(response);
+			})
+			.catch(error => {
+				console.error(error);
+			});
+		});
+	</script>
+</body>
+
+</html>

@@ -6,7 +6,7 @@ GOGET=$(GOCMD) get
 GOMOD=$(GOCMD) mod
 
 BINARY_NAME=gin_simple_api
-MAIN_PATH=./main.go
+MAIN_PATH=$(wildcard *.go)
 
 mod:
 	make go.mod
