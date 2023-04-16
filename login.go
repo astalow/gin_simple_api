@@ -27,12 +27,10 @@ func session(r *gin.Engine) {
 		var user User
 		if err := c.ShouldBindJSON(&user); err != nil {
 			// JSONパースエラーが発生した場合
-			fmt.Println("nande")
+			fmt.Printf("JSON parsing error occurred: %v\n", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 			return
 		}
-		fmt.Println(user.Username)
-		fmt.Println(user.Password)
 
 		// フォームから送信されたユーザー名とパスワードを取得する。
 		username := user.Username
@@ -41,7 +39,7 @@ func session(r *gin.Engine) {
 		// ユーザー名とパスワードの認証処理を実装する。
 		// ここでは、簡単のために固定のユーザー名とパスワードを設定しています。
 		if username == "user" && password == "password" {
-			fmt.Println("User logged in successfully")
+			fmt.Printf("User %v logged in successfully\n", username)
 			// 認証に成功した場合、セッションを開始し、ログイン済みの状態にする。
 			session := sessions.Default(c)
 			session.Set("username", username)
@@ -50,7 +48,7 @@ func session(r *gin.Engine) {
 			// ログインに成功した旨のメッセージを表示する。
 			c.Redirect(http.StatusFound, "/view")
 		} else {
-			fmt.Println("login failure")
+			fmt.Printf("Login failure for user %v\n", username)
 			// 認証に失敗した場合、ログインページにリダイレクトする。
 			c.Redirect(http.StatusFound, "/login")
 		}
@@ -59,11 +57,11 @@ func session(r *gin.Engine) {
 	r.GET("/logout", func(c *gin.Context) {
 		// セッションを破棄し、ログアウトする。
 		session := sessions.Default(c)
+		username := session.Get("username")
 		session.Clear()
 		session.Save()
-
-		// ログアウトした旨のメッセージを表示する。
-		c.HTML(http.StatusOK, "logout.html", nil)
+		fmt.Printf("%s logged out\n", username)
+		c.Redirect(http.StatusFound, "/login")
 	})
 
 	r.Use(func(c *gin.Context) {
@@ -79,15 +77,6 @@ func session(r *gin.Engine) {
 
 		// ユーザー名が存在する場合、次のハンドラーに進む。
 		c.Next()
-	})
-
-	r.GET("/secret", func(c *gin.Context) {
-		// セッションからユーザー名を取得する。
-		session := sessions.Default(c)
-		username := session.Get("username")
-
-		// ユーザー名を表示する。
-		c.HTML(http.StatusOK, "secret.html", gin.H{"username": username})
 	})
 
 }

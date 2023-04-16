@@ -14,6 +14,10 @@
 	</form>
 	<br><br>
 	{{.table}}
+	<br><br>
+    <form action="/logout" method="GET">
+        <input type="submit" value="Redirect">
+    </form>
 	<script>
 		document.getElementById("myForm").addEventListener("submit", function(event) {
 			event.preventDefault();
