@@ -12,10 +12,9 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
 	db := migrateDB()
-	// r.Use(RequestLogger())
 	printDB(db)
 
-	session(r)
+	handleUserSession(r)
 
 	var result Item
 	db.Raw("SELECT * FROM items").Scan(&result)

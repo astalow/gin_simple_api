@@ -14,16 +14,16 @@ type User struct {
 	Password string
 }
 
-func session(r *gin.Engine) {
+func handleUserSession(r *gin.Engine) {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
+	migrateAccountDB()
 
 	r.GET("/login", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login.html", nil)
 	})
 
 	r.POST("/login", func(c *gin.Context) {
-		// RequestLogger(c)
 		var user User
 		if err := c.ShouldBindJSON(&user); err != nil {
 			// JSONパースエラーが発生した場合
@@ -36,8 +36,7 @@ func session(r *gin.Engine) {
 		username := user.Username
 		password := user.Password
 
-		// ユーザー名とパスワードの認証処理を実装する。
-		// ここでは、簡単のために固定のユーザー名とパスワードを設定しています。
+		// ユーザー名とパスワードの認証処理
 		if username == "user" && password == "password" {
 			fmt.Printf("User %v logged in successfully\n", username)
 			// 認証に成功した場合、セッションを開始し、ログイン済みの状態にする。
