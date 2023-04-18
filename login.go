@@ -17,7 +17,7 @@ type User struct {
 func handleUserSession(r *gin.Engine) {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
-	migrateAccountDB()
+	db := migrateAccountDB()
 
 	r.GET("/login", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login.html", nil)
@@ -36,8 +36,20 @@ func handleUserSession(r *gin.Engine) {
 		username := user.Username
 		password := user.Password
 
+		var ac []Account
+
+		err := db.Where("username LIKE ?", username).Find(&ac).Error
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to query users"})
+			return
+		}
+
+		if len(ac) == 0 {
+			fmt.Println("unknown user")
+			return
+		}
 		// ユーザー名とパスワードの認証処理
-		if username == "user" && password == "password" {
+		if username == ac[0].Username && password == ac[0].Password {
 			fmt.Printf("User %v logged in successfully\n", username)
 			// 認証に成功した場合、セッションを開始し、ログイン済みの状態にする。
 			session := sessions.Default(c)
