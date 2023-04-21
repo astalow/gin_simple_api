@@ -2,26 +2,22 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+	<meta charset="UTF-8">
+	<title>Login</title>
 </head>
 
 <body>
-    <!-- <form id="loginform" method="post" action="/login"  onsubmit="redirectToMain()"> -->
-		<form id="loginform" method="post" action="/login">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="user">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="password">
-        <button type="submit">Login</button>
-    </form>
+	<!-- <form id="loginform" method="post" action="/login"  onsubmit="redirectToMain()"> -->
+	<form id="loginform" method="post" action="/login">
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" value="user">
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" value="password">
+		<button type="submit">Login</button>
+	</form>
 	<a href="/view">view</a>
-    <script>
-		// function redirectToMain() {
-		// 	// ログイン成功後にメインページにリダイレクトする
-		// 	window.location.href = "/view";
-		// }
-		document.getElementById("loginform").addEventListener("submit", function(event) {
+	<script>
+		document.getElementById("loginform").addEventListener("submit", function (event) {
 			event.preventDefault();
 			const form = event.target;
 			const data = {
@@ -35,13 +31,17 @@
 				},
 				body: JSON.stringify(data)
 			})
-			.then(response => {
-				console.log(response);
-				window.location.reload();
-			})
-			.catch(error => {
-				console.error(error);
-			});
+				.then(response => {
+					console.log(response);
+					if (response.ok) {
+						window.location.href = "/view"; // リダイレクト
+					} else {
+						throw new Error("login error");
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
 		});
 	</script>
 </body>
