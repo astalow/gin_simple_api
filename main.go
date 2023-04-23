@@ -15,6 +15,7 @@ func main() {
 	printDB(db)
 
 	handleUserSession(r)
+	handlePasswordComparison(r)
 
 	var result Item
 	db.Raw("SELECT * FROM items").Scan(&result)
