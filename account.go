@@ -1,6 +1,7 @@
 package main
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -8,7 +9,7 @@ import (
 type Account struct {
 	ID       uint   `gorm:"primaryKey"`
 	Username string `gorm:"not null"`
-	Password string `gorm:"not null"`
+	Password []byte `gorm:"not null"`
 }
 
 func migrateAccountDB() *gorm.DB {
@@ -25,8 +26,13 @@ func migrateAccountDB() *gorm.DB {
 		panic("failed to migrate database")
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.MinCost)
+	if err != nil {
+		return nil
+	}
+
 	accounts := []Account{
-		{ID: 1, Username: "user", Password: "password"},
+		{ID: 1, Username: "kudamonodaisuki", Password: hashedPassword},
 	}
 
 	for _, account := range accounts {

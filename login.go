@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -49,7 +50,14 @@ func handleUserSession(r *gin.Engine) {
 			return
 		}
 		// ユーザー名とパスワードの認証処理
-		if username == ac[0].Username && password == ac[0].Password {
+
+		err = bcrypt.CompareHashAndPassword(ac[0].Password, []byte(password))
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid password"})
+			return
+		}
+
+		if username == ac[0].Username {
 			fmt.Printf("User %v logged in successfully\n", username)
 			// 認証に成功した場合、セッションを開始し、ログイン済みの状態にする。
 			session := sessions.Default(c)
