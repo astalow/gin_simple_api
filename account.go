@@ -20,9 +20,10 @@ func migrateAccountDB() *gorm.DB {
 	}
 
 	// テーブルをマイグレーションする
-	db.Exec("DELETE FROM accounts")
-	err = db.AutoMigrate(&Account{})
-	if err != nil {
+	if db.Migrator().HasTable(&Account{}) {
+		db.Exec("DROP TABLE accounts")
+	}
+	if db.AutoMigrate(&Account{}) != nil {
 		panic("failed to migrate database")
 	}
 

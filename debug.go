@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func getUserAndPassword(c *gin.Context) (User, error) {
@@ -43,4 +44,24 @@ func handlePasswordComparison(r *gin.Engine) {
 
 		fmt.Println("Password is valid")
 	})
+}
+
+func setDebugItems(db *gorm.DB) {
+	com := "oisii"
+	items := []Item{
+		{Name: "banana", Price: 80, Comment: com},
+		{Name: "orange", Price: 120, Comment: com},
+		{Name: "grape", Price: 200, Comment: com},
+		{Name: "kiwi", Price: 150, Comment: com},
+		{Name: "pineapple", Price: 300, Comment: com},
+		{Name: "watermelon", Price: 500, Comment: com},
+		{Name: "peach", Price: 180, Comment: com},
+		{Name: "pear", Price: 120, Comment: com},
+		{Name: "mango", Price: 250, Comment: com},
+		{Name: "human", Price: 0, Comment: "oisikunai"},
+	}
+
+	for _, item := range items {
+		db.Create(&item)
+	}
 }
