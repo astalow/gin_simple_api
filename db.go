@@ -41,6 +41,7 @@ func migrateDB() *gorm.DB {
 		panic("failed to migrate database")
 	}
 	setDebugItems(db)
+	setDebugGenres(db)
 	return db
 }
 
@@ -56,12 +57,14 @@ func buildHTMLTableFromDB(db *gorm.DB) string {
 			<th>Name</th>
 			<th>Price</th>
 			<th>Comment</th>
+			<th>Genre</th>
 		</tr>
 		{{range .}}
 			<tr>
 				<td>{{.Name}}</td>
 				<td>{{.Price}}</td>
 				<td>{{.Comment}}</td>
+				<td>{{.Genre_id}}</td>
 			</tr>
 		{{end}}
 	</table>`
