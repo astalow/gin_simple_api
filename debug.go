@@ -49,16 +49,16 @@ func handlePasswordComparison(r *gin.Engine) {
 func setDebugItems(db *gorm.DB) {
 	com := "oisii"
 	items := []Item{
-		{Name: "banana", Price: 80, Comment: com, Genre_id: 0},
-		{Name: "orange", Price: 120, Comment: com, Genre_id: 0},
-		{Name: "grape", Price: 200, Comment: com, Genre_id: 0},
-		{Name: "kiwi", Price: 150, Comment: com, Genre_id: 0},
-		{Name: "pineapple", Price: 300, Comment: com, Genre_id: 0},
-		{Name: "watermelon", Price: 500, Comment: com, Genre_id: 0},
-		{Name: "peach", Price: 180, Comment: com, Genre_id: 0},
-		{Name: "pear", Price: 120, Comment: com, Genre_id: 0},
-		{Name: "mango", Price: 250, Comment: com, Genre_id: 0},
-		{Name: "human", Price: 0, Comment: "oisikunai", Genre_id: 0},
+		{Name: "banana", Price: 80, Comment: com, Genre_id: 1},
+		{Name: "orange", Price: 120, Comment: com, Genre_id: 1},
+		{Name: "grape", Price: 200, Comment: com, Genre_id: 1},
+		{Name: "kiwi", Price: 150, Comment: com, Genre_id: 1},
+		{Name: "pineapple", Price: 300, Comment: com, Genre_id: 1},
+		{Name: "watermelon", Price: 500, Comment: com, Genre_id: 1},
+		{Name: "peach", Price: 180, Comment: com, Genre_id: 1},
+		{Name: "pear", Price: 120, Comment: com, Genre_id: 1},
+		{Name: "mango", Price: 250, Comment: com, Genre_id: 1},
+		{Name: "human", Price: 0, Comment: "oisikunai", Genre_id: 1},
 	}
 
 	for _, item := range items {

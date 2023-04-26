@@ -17,9 +17,6 @@ func main() {
 	handleUserSession(r)
 	// handlePasswordComparison(r)
 
-	var result Item
-	db.Raw("SELECT * FROM items").Scan(&result)
-
 	r.GET("/", func(c *gin.Context) {
 		var items []Item
 		db.Find(&items)
