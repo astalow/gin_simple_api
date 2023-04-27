@@ -46,8 +46,15 @@ func migrateDB() *gorm.DB {
 }
 
 func buildHTMLTableFromDB(db *gorm.DB) string {
-	var items []Item
-	if err := db.Find(&items).Error; err != nil {
+	var items []struct {
+		ID         uint
+		Name       string
+		Price      uint
+		Genre_name string
+		Comment    string
+	}
+
+	if err := db.Raw("SELECT i.name, i.price, i.comment,COALESCE(g.name, 'other') AS genre_name	FROM items i	LEFT JOIN genres g ON i.genre_id = g.id	").Scan(&items).Error; err != nil {
 		return ""
 	}
 
@@ -56,15 +63,15 @@ func buildHTMLTableFromDB(db *gorm.DB) string {
 		<tr>
 			<th>Name</th>
 			<th>Price</th>
-			<th>Comment</th>
 			<th>Genre</th>
+			<th>Comment</th>
 		</tr>
 		{{range .}}
 			<tr>
 				<td>{{.Name}}</td>
 				<td>{{.Price}}</td>
+				<td>{{.Genre_name}}</td>
 				<td>{{.Comment}}</td>
-				<td>{{.Genre_id}}</td>
 			</tr>
 		{{end}}
 	</table>`
