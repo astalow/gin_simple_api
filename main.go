@@ -33,10 +33,12 @@ func main() {
 
 		// データベースからHTMLテーブルを構築する
 		htmlTable := buildHTMLTableFromDB(db)
+		avgpricetable := buildHTMLTableFromDB2(db)
 
 		// テンプレートをレンダリングする
 		err = tmpl.Execute(c.Writer, gin.H{
-			"table": template.HTML(htmlTable),
+			"table":  template.HTML(htmlTable),
+			"table2": template.HTML(avgpricetable),
 		})
 		if err != nil {
 			log.Fatal(err)

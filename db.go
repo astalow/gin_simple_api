@@ -89,6 +89,48 @@ func buildHTMLTableFromDB(db *gorm.DB) string {
 	return buf.String()
 }
 
+func buildHTMLTableFromDB2(db *gorm.DB) string {
+	var avg []struct {
+		Name         string
+		AveragePrice string
+	}
+
+	q := `SELECT genres.name, AVG(items.price) AS AveragePrice
+		FROM genres
+		LEFT JOIN items ON genres.id = items.genre_id
+		GROUP BY genres.name;`
+
+	if err := db.Raw(q).Scan(&avg).Error; err != nil {
+		return ""
+	}
+
+	const tableTemplate = `
+	<table>
+		<tr>
+			<th>Genre</th>
+			<th>AveragePrice</th>
+		</tr>
+		{{range .}}
+			<tr>
+				<td>{{.Name}}</td>
+				<td>{{.AveragePrice}}</td>
+			</tr>
+		{{end}}
+	</table>`
+
+	tmpl, err := template.New("table2").Parse(tableTemplate)
+	if err != nil {
+		return ""
+	}
+
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, avg); err != nil {
+		return ""
+	}
+
+	return buf.String()
+}
+
 func RequestLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// リクエストボディをログに出力

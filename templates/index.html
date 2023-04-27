@@ -3,6 +3,19 @@
 <head>
 	<meta charset="UTF-8">
 	<title>JSON POST Form</title>
+	<style>
+		.table-container {
+		  display: flex;
+		}
+		table {
+		  border-collapse: collapse;
+		}
+		td, th {
+		  vertical-align: top;
+		  border: 1px solid black;
+		  padding: 5px;
+		}
+	  </style>
 </head>
 <body>
 	<form id="myForm" action="/">
@@ -15,7 +28,10 @@
 		<input type="submit">
 	</form>
 	<br><br>
+	<div class="table-container">
 	{{.table}}
+	{{.table2}}
+	</div>
 	<br><br>
     <form action="/logout" method="GET">
         <input type="submit" value="Redirect">
